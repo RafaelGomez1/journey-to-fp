@@ -5,12 +5,11 @@ import java.math.BigDecimal
 object FunctionsAsFirstClassCitizens {
 
     fun example() {
-
         // Function passed as an argument
         val functionPassed: Int = performOperation(5, ::increment)
 
         // Lambda passed as an argument
-        val lambdaPassed = performOperation(value = 5, operation = { it + 1 })
+        val lambdaPassed = performOperation(value = 5, operation = { it + 1 } )
 
         // Function returned from another function
         val functionReturn: (Int) -> BigDecimal  = toBigDecimal(5)
