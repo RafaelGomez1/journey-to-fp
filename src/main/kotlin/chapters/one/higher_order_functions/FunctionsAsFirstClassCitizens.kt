@@ -6,7 +6,7 @@ object FunctionsAsFirstClassCitizens {
 
     fun example() {
         // Function passed as an argument
-        val functionPassed: Int = performOperation(5, ::increment)
+        val functionPassed : Int = performOperation(5, ::increment)
 
         // Lambda passed as an argument
         val lambdaPassed = performOperation(value = 5, operation = { it + 1 } )
@@ -15,9 +15,9 @@ object FunctionsAsFirstClassCitizens {
         val functionReturn: (Int) -> BigDecimal  = toBigDecimal(5)
     }
 
-    inline fun performOperation(value: Int, operation: (value: Int) -> Int): Int = operation(value)
+    private inline fun performOperation(value: Int, operation: (value: Int) -> Int): Int = operation(value)
 
-    fun increment(value: Int): Int = value.inc()
+    private fun increment(value: Int): Int = value.inc()
 
-    fun toBigDecimal(value: Int): (Int) -> BigDecimal = { value.toBigDecimal() }
+    private fun toBigDecimal(value: Int): (Int) -> BigDecimal = { value.toBigDecimal() }
 }
