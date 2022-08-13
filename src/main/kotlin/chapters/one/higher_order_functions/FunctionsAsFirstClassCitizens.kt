@@ -2,7 +2,7 @@ package chapters.one.higher_order_functions
 
 import java.math.BigDecimal
 
-object HigherOrderFunctionsOperations {
+object FunctionsAsFirstClassCitizens {
 
     fun example() {
 
