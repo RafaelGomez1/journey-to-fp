@@ -16,7 +16,7 @@ object FunctionsAsFirstClassCitizens {
         val functionReturn: (Int) -> BigDecimal  = toBigDecimal(5)
     }
 
-    fun performOperation(value: Int, operation: (value: Int) -> Int): Int = operation(value)
+    inline fun performOperation(value: Int, operation: (value: Int) -> Int): Int = operation(value)
 
     fun increment(value: Int): Int = value.inc()
 
