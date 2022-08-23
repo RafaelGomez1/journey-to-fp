@@ -3,12 +3,17 @@ package chapters.one.higher_order_functions
 object AnonymousFunctions {
 
     fun example() {
-        // Lambda passed as an argument
-        val increaseValue = performOperation(value = 5, operation = { it + 1 })
-        val squareValue = performOperation(value = 5, operation = { it * it })
+        // Square function as a lambda expression
+        val square = { value : Int -> value * value }
+        square(5)
 
-        // Lambda passed as trailing
-        val squareValueTrailing = performOperation(value = 5) { it * it }
+        // Square function as an anonymous function
+        val squareAnonymous = fun ( value: Int ): Int = value * value
+        squareAnonymous(5)
+
+        // usage of both functions
+        performOperation(5, square)
+        performOperation(5, squareAnonymous)
     }
 
     private inline fun performOperation(
