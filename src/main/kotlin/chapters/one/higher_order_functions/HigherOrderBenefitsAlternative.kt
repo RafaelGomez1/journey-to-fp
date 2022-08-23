@@ -1,12 +1,16 @@
 package chapters.one.higher_order_functions
 
-import java.util.UUID
+import chapters.one.higher_order_functions.EnergyDrinkModule.energyDrinkService
+import chapters.one.higher_order_functions.EnergyDrinkModule.executeWithLogging
+import chapters.one.higher_order_functions.EnergyDrinkModule.Unavailable
+import chapters.one.higher_order_functions.EnergyDrinkModule.Available
+
 
 object HigherOrderBenefitsAlternative {
-    fun example() {
+
+    fun filteringExample() {
         // Generation of the service
-        val energyDrink = EnergyDrink(id = UUID.randomUUID().toString(), name = "RedBull")
-        val energyDrinkService = energyDrinkService(energyDrink)
+        val energyDrinkService = energyDrinkService()
 
         // Sample drink list
         val drinks = listOf(
@@ -20,54 +24,29 @@ object HigherOrderBenefitsAlternative {
         val allAvailableDrinks = drinks.filter { drink -> drink.availability == Available }
         val drinksStartingWithMo = drinks.filter { drink -> drink.name.startsWith("Mo") }
         val drinksStartingWithDr = drinks.filter { drink -> drink.name.startsWith("Dr") }
+    }
+
+    fun executeWithLoggingExample() {
+        // Generation of the service
+        val energyDrinkService = energyDrinkService()
 
         // Executing EnergyDrink service methods inside higher-order function executeWithLogging
+        val energyDrink = energyDrinkService.create(name = "RedBull", availability = Available)
+
         val unavailableEnergyDrink = executeWithLogging(
             energyDrink = energyDrink,
-            funtion = { drink ->  energyDrinkService.changeAvailability(Unavailable) }
+            funtion = { drink ->  energyDrinkService.changeAvailability(drink, Unavailable) }
         )
 
         val renamedEnergyDrink = executeWithLogging(
             energyDrink = energyDrink,
-            funtion = { drink ->  energyDrinkService.rename("Coca-Cola") }
+            funtion = { drink ->  energyDrinkService.rename(drink, "Coca-Cola") }
         )
 
         val availableEnergyDrink = executeWithLogging(
             energyDrink = energyDrink,
-            funtion = { drink ->  energyDrinkService.changeAvailability(Available) }
+            funtion = { drink ->  energyDrinkService.changeAvailability(drink, Available) }
         )
 
     }
-
-    sealed class Availability
-        object Available : Availability()
-        object Unavailable : Availability()
-
-    sealed class Drink
-
-    data class EnergyDrink(
-        val id: String,
-        val name: String,
-        val availability: Availability = Available
-    ) : Drink()
-
-    interface EnergyDrinkService<T : Drink> {
-        fun create(name: String, availability: Availability): T
-        fun changeAvailability(availability: Availability): T
-        fun rename(name: String): T
-    }
-
-    // Typically you'd have the dependencies of the Energy Module here (repositories, eventPublishers) instead of energy drink object
-    private fun energyDrinkService(energyDrink: EnergyDrink) = object : EnergyDrinkService<EnergyDrink> {
-        override fun create(name: String, availability: Availability): EnergyDrink = EnergyDrink(id = UUID.randomUUID().toString(),name = name, availability = availability)
-        override fun rename(name: String): EnergyDrink = energyDrink.copy(name = name)
-        override fun changeAvailability(availability: Availability): EnergyDrink = energyDrink.copy(availability = availability)
-    }
-
-    // Higher-order function that executes a function and logs it
-    inline fun <T : Drink> executeWithLogging(
-        energyDrink: T,
-        funtion: (T) -> T,
-    ): T = funtion(energyDrink)
-        .also { println("Executed function for ${energyDrink}") }
 }
