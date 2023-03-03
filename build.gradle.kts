@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.10"
+    id("com.google.devtools.ksp") version "1.6.10-1.0.4"
 }
 
 group = "org.example"
@@ -13,6 +14,9 @@ repositories {
 
 dependencies {
     implementation("io.arrow-kt:arrow-core:1.1.4-rc.3")
+    implementation("io.arrow-kt:arrow-optics:1.1.4-rc.3")
+    ksp("io.arrow-kt:arrow-optics-ksp-plugin:1.1.4-rc.3")
+
     testImplementation(kotlin("test"))
 }
 

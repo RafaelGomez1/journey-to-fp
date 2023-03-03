@@ -18,9 +18,6 @@ data class UserEmailUpdatedEvent(
     val email: Email
 ) : DomainEvent()
 
-
-
-
 interface DomainEventPublisher {
     fun publish(event: List<DomainEvent>)
 }

@@ -5,13 +5,13 @@ import arrow.core.flatMap
 import errorHandling.oop.Email
 import errorHandling.oop.UserId
 
-class UserEmailUpdater3(
+class UserEmailUpdater5(
     private val repository: UserRepository,
     private val publisher: DomainEventPublisher
 ) {
     private val finder =  UserFinder(repository)
 
-    fun invoke(id: UserId, email: Email): Either<UpdateUserEmailError2, Unit> =
+    fun invoke(id: UserId, email: Email): Either<ArrowUpdateUserEmailError, Unit> =
         findUser(id)
             .flatMap { user -> user.changeEmail(email) }
             .flatMap { user -> save(user) }
@@ -21,8 +21,8 @@ class UserEmailUpdater3(
         finder.invoke(userId)
             .mapLeft { error ->
                 when(error) {
-                    is FindUserError.UserDoesNotExist -> UpdateUserEmailError2.UserDoesNotExist2
-                    is FindUserError.Unknown -> UpdateUserEmailError2.Unknown(error.error)
+                    is FindUserError.UserDoesNotExist -> ArrowUpdateUserEmailError.UserDoesNotExistArrow
+                    is FindUserError.Unknown -> ArrowUpdateUserEmailError.Unknown(error.error)
                 }
             }
 
@@ -30,22 +30,22 @@ class UserEmailUpdater3(
         updateEmail(email)
             .mapLeft { error ->
                 when(error) {
-                    is UserError.UserAlreadyHasGivenEmail -> UpdateUserEmailError2.UserAlreadyHasGivenEmail2
+                    is UserError.UserAlreadyHasGivenEmail -> ArrowUpdateUserEmailError.UserAlreadyHasGivenEmailArrow
                 }
             }
 
     private fun save(user: User) =
         repository.save(user)
             .map { user }
-            .mapLeft { error -> UpdateUserEmailError2.Unknown(error) }
+            .mapLeft { error -> ArrowUpdateUserEmailError.Unknown(error) }
 
     private fun publishEvents(user: User) =
         Either.catch { publisher.publish(user.events) }
-            .mapLeft { error -> UpdateUserEmailError2.Unknown(error) }
+            .mapLeft { error -> ArrowUpdateUserEmailError.Unknown(error) }
 }
 
-sealed class UpdateUserEmailError2 {
-    object UserDoesNotExist2 : UpdateUserEmailError2()
-    object UserAlreadyHasGivenEmail2 : UpdateUserEmailError2()
-    class Unknown(val error: Throwable) : UpdateUserEmailError2()
+sealed class ArrowUpdateUserEmailError {
+    object UserDoesNotExistArrow : ArrowUpdateUserEmailError()
+    object UserAlreadyHasGivenEmailArrow : ArrowUpdateUserEmailError()
+    class Unknown(val error: Throwable) : ArrowUpdateUserEmailError()
 }
