@@ -31,8 +31,9 @@ enum class Status {
 @optics
 sealed class OperationType {
 
-    class PAYMENT() : OperationType()
-    class REFUND() : OperationType()
+    object PAYMENT : OperationType()
+    object REFUND : OperationType()
+    companion object {}
 }
 
 enum class ConceptType {

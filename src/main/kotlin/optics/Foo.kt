@@ -3,6 +3,7 @@ package optics
 import arrow.optics.Every
 import arrow.optics.Fold
 import arrow.optics.Traversal
+import arrow.optics.dsl.every
 
 object Foo {
 
@@ -42,19 +43,13 @@ object Foo {
 
     fun invoke() {
         // Iterate over list of operations and select the refund operation type
-        val a: Every<Payment, List<Operation>> =
-            Payment.operations
-                .every(Every.list<Operation>())
-                .
+        val a: Payment =
+            Payment.operations.every(Every.list()).concepts.modify(payment) { emptyList() }
 
 
-        Instruments.instruments.every(Every.list()).guitar.strings.modify(instruments){ GuitarString.newStrings() }
+        //Instruments.instruments.every(Every.list()).guitar.strings.modify(instruments){ GuitarString.newStrings() }
 
         val everyConcept: Every<List<Concept>, Concept> = Every.from(Traversal.list(), Fold.list())
         val everyOperation: Every<List<Operation>, Operation> = Every.from(Traversal.list(), Fold.list())
-
-
-        payment.operations.
-
     }
 }
